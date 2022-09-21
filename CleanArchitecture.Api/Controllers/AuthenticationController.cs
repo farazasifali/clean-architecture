@@ -1,5 +1,6 @@
 using CleanArchitecture.Contracts.Authentication;
 using Microsoft.AspNetCore.Mvc;
+using CleanArchitecture.Application.Services.Authentication;
 
 namespace CleanArchitecture.Api.Controllers;
 
@@ -7,15 +8,27 @@ namespace CleanArchitecture.Api.Controllers;
 [Route("auth")]
 public class AuthenticationController : ControllerBase
 {
-  [Route("register")]
-  public IActionResult register(RegisterRequest request)
+  private readonly IAuthenticationService _authenticationService;
+
+  public AuthenticationController(IAuthenticationService authenticationService)
   {
-    return Ok(request);
+    _authenticationService = authenticationService;
   }
 
   [Route("login")]
   public IActionResult login(LoginRequest request)
   {
-    return Ok(request);
+    var result = _authenticationService.Login(request.Email, request.Password);
+    var response = new AuthenticationResponse(result.Id, result.FirstName, result.LastName, result.Email, result.Token);
+    return Ok(response);
   }
+
+  [Route("register")]
+  public IActionResult register(RegisterRequest request)
+  {
+    var result = _authenticationService.Register(request.FirstName, request.LastName, request.Email, request.Password);
+    var response = new AuthenticationResponse(result.Id, result.FirstName, result.LastName, result.Email, result.Token);
+    return Ok(response);
+  }
+
 }
