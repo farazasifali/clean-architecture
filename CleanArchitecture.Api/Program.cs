@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
         .AddInfastructure(builder.Configuration);
     builder.Services.AddControllers();
 
-    //builder.Services.AddSingleton<ProblemDetailsFactory, CleanArchitectureProblemDetailsFactory>();
+    builder.Services.AddSingleton<ProblemDetailsFactory, CleanArchitectureProblemDetailsFactory>();
 }
 
 var app = builder.Build();
